@@ -204,14 +204,14 @@ var AddInventory = function () {
                             }
                         ])
                         .then(answers => {
-                            var sql = "SET SQL_SAFE_UPDATES = 0; " + 
-                            "UPDATE items SET quanity = ? WHERE description like ?"
-                            connection2.query(sql, [parseInt(answers.addQuanity), answers.item], function (err, result){
+                            connection2.connect();
+                            var sql = "UPDATE items SET quanity = (quanity + CAST(? AS UNSIGNED)) WHERE description like ?"
+                            connection2.query(sql, [parseInt(answers.addQuanity),'%' + answers.item + '%'], function (err, result){
                                 if (err) throw(err);
                             })
                             connection2.end()
                             console.log(parseInt(answers.addQuanity) + ' units have been added to the item ' + answers.item)
-                        }) 
+                        })
                 })
             connection.end();
 
